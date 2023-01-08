@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class CustomDelimiter extends StatelessWidget {
-  const CustomDelimiter({Key? key}) : super(key: key);
+  const CustomDelimiter({Key? key, this.color = Colors.white})
+      : super(key: key);
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,7 @@ class CustomDelimiter extends StatelessWidget {
       child: Center(
         child: Container(
           margin: const EdgeInsetsDirectional.only(start: 1.0, end: 1.0),
-          color: const Color.fromARGB(255, 255, 255, 255).withOpacity(0.3),
+          color: color.withOpacity(0.3),
         ),
       ),
     );
@@ -18,7 +20,9 @@ class CustomDelimiter extends StatelessWidget {
 }
 
 class CustomVerticalDelimiter extends StatelessWidget {
-  const CustomVerticalDelimiter({Key? key}) : super(key: key);
+  const CustomVerticalDelimiter({Key? key, this.color = Colors.white})
+      : super(key: key);
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class CustomVerticalDelimiter extends StatelessWidget {
       child: Center(
         child: Container(
           margin: const EdgeInsetsDirectional.only(top: 1.0, bottom: 1.0),
-          color: Colors.black.withOpacity(0.3),
+          color: color.withOpacity(0.3),
         ),
       ),
     );

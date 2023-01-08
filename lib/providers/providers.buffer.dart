@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Text;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:markdown_editor/providers/providers.autosave.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_io/io.dart';
 import 'package:file_picker/file_picker.dart';
@@ -128,7 +129,7 @@ class AppNotifier extends StateNotifier<AppModel> {
     String? contents,
     String? path,
   }) {
-    contents ??= '';
+    contents ??= '# New Note';
     state = state.copyWith(
       buffer: contents,
       currentBufferIndex: state.activeBuffers.length,
@@ -173,6 +174,10 @@ class AppNotifier extends StateNotifier<AppModel> {
     timer = Timer(_delay, () {
       immediatelySetBuffer(buffer);
     });
+
+    if (AutosaveNotifier.stateOf(sharedPrefs!).stateIndex == 1) {
+      save();
+    }
   }
 
   Buffer get activeBuffer => state.activeBuffers[state.currentBufferIndex];
@@ -226,7 +231,7 @@ class AppNotifier extends StateNotifier<AppModel> {
     controller.clear();
     state = state.copyWith(
       buffer: '',
-      activeBuffers: [const Buffer('Untitled', dirty: false)],
+      activeBuffers: [const Buffer('New Buffer', dirty: false)],
       currentBufferIndex: 0,
     );
     persist(buffer: true, activeBuffers: true, currentBufferIndex: true);

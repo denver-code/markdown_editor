@@ -112,6 +112,13 @@ class BottomBar extends ConsumerWidget {
                   //     icon: Icon(Icons.format_indent_decrease),
                   //     onPressed: noop,
                   //     tooltip: 'Dedent'),
+                  Consumer(builder: (_, ref, __) {
+                    final state = ref.watch(visibiiltyProvider);
+                    return IconButton(
+                        icon: Icon(state.icon),
+                        onPressed: ref.read(visibiiltyProvider.notifier).next,
+                        tooltip: state.message);
+                  }),
                   Consumer(builder: (bc, ref, _) {
                     return IconButton(
                       icon: const Icon(Icons.save),

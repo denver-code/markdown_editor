@@ -3,12 +3,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-
 import '../providers.dart';
 
 const commit = String.fromEnvironment('commit');
 
-void _noop() {}
+// void _noop() {}
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({Key? key}) : super(key: key);
@@ -20,7 +19,7 @@ class AppDrawer extends ConsumerWidget {
         const SliverList(
           delegate: SliverChildListDelegate.fixed([
             SizedBox(height: 58),
-            Center(child: Text('Menu')),
+            Center(child: Text('Fast Menu')),
             Divider(),
           ]),
         ),
@@ -28,8 +27,8 @@ class AppDrawer extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           sliver: SliverGrid(
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 3.0,
+              crossAxisCount: 1,
+              childAspectRatio: 5.0,
               mainAxisSpacing: 8,
               crossAxisSpacing: 8,
             ),
@@ -69,74 +68,89 @@ class AppDrawer extends ConsumerWidget {
                   },
                   label: const Text('Repaint rainbows'),
                 ),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.add),
-                label: const Text('New buffer'),
-                onPressed: ref.read(sourceProvider.notifier).newBuffer,
-              ),
-              OutlinedButton.icon(
-                icon: const Icon(Icons.folder_open),
-                label: const Text('Open'),
-                onPressed: ref.read(sourceProvider.notifier).open,
-              ),
-              PopupMenuButton<Exports>(
-                child: IgnorePointer(
-                  child: OutlinedButton.icon(
-                    icon: const Icon(Icons.import_export),
-                    label: const Text('Export'),
-                    onPressed: _noop,
-                  ),
-                ),
-                onSelected: ref.read(sourceProvider.notifier).export,
-                itemBuilder: (bc) {
-                  return [
-                    const PopupMenuItem(
-                        value: Exports.html, child: Text('HTML')),
-                    const PopupMenuItem(
-                        value: Exports.htmlPlain, child: Text('HTML (Plain)')),
-                    const PopupMenuItem(
-                        value: Exports.md, child: Text('Markdown')),
-                  ];
-                },
-              ),
-            ]),
-          ),
-        ),
-        const SliverPadding(
-          padding: EdgeInsets.only(top: 15),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate.fixed([
-              Center(child: Text('Buffers')),
-              Divider(),
-            ]),
-          ),
-        ),
-        Consumer(builder: (bc, ref, _) {
-          final prov = ref.watch(sourceProvider);
-          final buffers = prov.activeBuffers;
-          final activeIndex = prov.currentBufferIndex;
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (bc, idx) {
-                final buffer = buffers[idx];
-                return ListTile(
-                  title: Text(buffer.title),
-                  selected: idx == activeIndex,
-                  onTap: () {
-                    ref.read(sourceProvider.notifier).switchBuffer(idx);
-                  },
-                  trailing: IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () {
-                      ref.read(sourceProvider.notifier).removeBuffer(idx);
-                    },
-                  ),
+              // OutlinedButton.icon(
+              //   icon: const Icon(Icons.add),
+              //   label: const Text('New buffer'),
+              //   onPressed: ref.read(sourceProvider.notifier).newBuffer,
+              // ),
+              Consumer(builder: (_, ref, __) {
+                final state = ref.watch(autosaveProvider);
+                return OutlinedButton.icon(
+                  icon: const Icon(Icons.save),
+                  onPressed: ref.read(autosaveProvider.notifier).next,
+                  label: Text(state.message),
                 );
-              },
-              childCount: buffers.length,
-            ),
-          );
-        }),
+              }),
+
+              // OutlinedButton.icon(
+              //   icon: const Icon(Icons.save),
+              //   label: Text(ref.watch(autosaveProvider).message),
+              //   onPressed: ref.watch(autosaveProvider).next,
+              // ),
+
+              // OutlinedButton.icon(
+              //   icon: const Icon(Icons.folder_open),
+              //   label: const Text('Open'),
+              //   onPressed: ref.read(sourceProvider.notifier).open,
+              // ),
+              // PopupMenuButton<Exports>(
+              //   child: IgnorePointer(
+              //     child: OutlinedButton.icon(
+              //       icon: const Icon(Icons.import_export),
+              //       label: const Text('Export'),
+              //       onPressed: _noop,
+              //     ),
+              //   ),
+              //   onSelected: ref.read(sourceProvider.notifier).export,
+              //   itemBuilder: (bc) {
+              //     return [
+              //       const PopupMenuItem(
+              //           value: Exports.html, child: Text('HTML')),
+              //       const PopupMenuItem(
+              //           value: Exports.htmlPlain, child: Text('HTML (Plain)')),
+              //       const PopupMenuItem(
+              //           value: Exports.md, child: Text('Markdown')),
+              //     ];
+              //   },
+              // ),
+            ]),
+          ),
+        ),
+        // const SliverPadding(
+        //   padding: EdgeInsets.only(top: 15),
+        //   sliver: SliverList(
+        //     delegate: SliverChildListDelegate.fixed([
+        //       Center(child: Text('Buffers')),
+        //       Divider(),
+        //     ]),
+        //   ),
+        // ),
+        // Consumer(builder: (bc, ref, _) {
+        //   final prov = ref.watch(sourceProvider);
+        //   final buffers = prov.activeBuffers;
+        //   final activeIndex = prov.currentBufferIndex;
+        //   return SliverList(
+        //     delegate: SliverChildBuilderDelegate(
+        //       (bc, idx) {
+        //         final buffer = buffers[idx];
+        //         return ListTile(
+        //           title: Text(buffer.title),
+        //           selected: idx == activeIndex,
+        //           onTap: () {
+        //             ref.read(sourceProvider.notifier).switchBuffer(idx);
+        //           },
+        //           trailing: IconButton(
+        //             icon: const Icon(Icons.close),
+        //             onPressed: () {
+        //               ref.read(sourceProvider.notifier).removeBuffer(idx);
+        //             },
+        //           ),
+        //         );
+        //       },
+        //       childCount: buffers.length,
+        //     ),
+        //   );
+        // }),
         if (commit.isNotEmpty)
           const SliverList(
             delegate: SliverChildListDelegate.fixed([

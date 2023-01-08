@@ -2,8 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:markdown_editor/color_schemes.dart';
 import 'package:markdown_editor/providers.dart';
-import 'package:markdown_editor/screens/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:markdown_editor/screens/editor.dart';
+import 'package:markdown_editor/screens/menu.dart';
 import 'package:statsfl/statsfl.dart';
 
 void main() {
@@ -20,17 +21,25 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(colorScheme: ayuLight, fontFamily: "AvenirNext"),
-          darkTheme:
-              ThemeData(colorScheme: specialDark, fontFamily: "AvenirNext"),
+          theme: ThemeData(
+              colorScheme: ayuLight,
+              fontFamily: "AvenirNext",
+              scaffoldBackgroundColor: ayuLight.background),
+          darkTheme: ThemeData(
+            colorScheme: specialDark,
+            fontFamily: "AvenirNext",
+            scaffoldBackgroundColor: specialDark.background,
+          ),
           themeMode: ref.watch(themeModeProvider).themeMode,
-          home: child!,
+          home:
+              child!, // child! //Navigator.push(context, MaterialPageRoute(builder: (_) => const DrawScreen()));
+          routes: {"/editor": (_) => const Editor()},
         );
       },
       child: StatsFl(
           isEnabled: !kReleaseMode,
           align: Alignment.topRight,
-          child: const Main()),
+          child: const MainMenuScreen()),
     );
   }
 }

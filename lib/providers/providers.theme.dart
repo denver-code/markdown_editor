@@ -15,7 +15,7 @@ class ThemeState {
   static const values = [
     ThemeState(
       themeMode: ThemeMode.system,
-      message: 'Follow System',
+      message: 'As System',
       icon: Icons.brightness_auto,
     ),
     ThemeState(

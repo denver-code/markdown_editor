@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:markdown_editor/providers/providers.autosave.dart';
 import 'package:markdown_editor/providers/providers.buffer.dart';
 import 'package:markdown_editor/providers/providers.math.dart';
 import 'package:markdown_editor/providers/providers.text.dart';
@@ -16,10 +17,12 @@ final sharedPrefsProvider =
     FutureProvider((_) => SharedPreferences.getInstance());
 final initializedProvider =
     Provider<bool>((ref) => ref.watch(sharedPrefsProvider).asData != null);
+
 final handlerProvider = Provider((ref) => TextControllerHandler(ref));
 
 final sourceProvider = StateNotifierProvider<AppNotifier, AppModel>((ref) {
   final s = ref.watch(sharedPrefsProvider);
+
   return AppNotifier.fromPref(s.asData?.value);
 });
 
@@ -39,6 +42,13 @@ final astProvider = Provider((ref) {
     inlineSyntaxes: [MathSyntax(), TaskListSyntax()],
   );
   return doc.parseLines(const LineSplitter().convert(source));
+});
+
+// ref.watch(autosaveProvider).index
+final autosaveProvider =
+    StateNotifierProvider<AutosaveNotifier, AutosaveState>((ref) {
+  final s = ref.watch(sharedPrefsProvider);
+  return AutosaveNotifier.fromPref(s.asData?.value);
 });
 
 final themeModeProvider =
@@ -69,6 +79,6 @@ final scribbleProvider = StateNotifierProvider<ScribbleNotifier, ScribbleState>(
 
 // ------------------------ enum definitions -----------------------------------
 
-enum VisibilityStates { editor, preview, sbs }
+enum VisibilityStates { editor, preview, stack }
 
 enum Exports { html, htmlPlain, md }

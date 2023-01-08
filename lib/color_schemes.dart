@@ -25,7 +25,7 @@ final specialDark = ColorScheme(
   primaryContainer: const Color.fromARGB(255, 217, 74, 74), // syntax.entity
   secondary: const Color.fromARGB(255, 123, 230, 80), // common.accent
   secondaryContainer: const Color.fromARGB(255, 84, 255, 118), // syntax.func
-  surface: const Color.fromARGB(255, 30, 30, 30), // ui.selection.bg
+  surface: const Color.fromARGB(255, 33, 33, 33), // ui.selection.bg
   background: HexColor.fromHex("#1A1C1C"), // common.bg
   error: const Color(0xffff3333), // syntax.error
   onPrimary: const Color.fromARGB(255, 255, 0, 0),

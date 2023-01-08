@@ -26,13 +26,13 @@ class VisibilityState {
       message: 'Preview',
     ),
     VisibilityState(
-      visibiilty: VisibilityStates.sbs,
+      visibiilty: VisibilityStates.stack,
       icon: Icons.vertical_split,
-      message: 'Side-by-side',
+      message: 'Stack',
     ),
   ];
 
-  static VisibilityState get sbs => values[2];
+  static VisibilityState get stack => values[2];
 
   VisibilityState get next => values[(visibiilty.index + 1) % values.length];
 
@@ -40,20 +40,20 @@ class VisibilityState {
 
   bool get editing => visibiilty != VisibilityStates.preview;
   bool get previewing => visibiilty != VisibilityStates.editor;
-  bool get doSyncScroll => visibiilty == VisibilityStates.sbs;
-  bool get sideBySide => visibiilty == VisibilityStates.sbs;
+  bool get doSyncScroll => visibiilty == VisibilityStates.stack;
+  bool get sideBySide => visibiilty == VisibilityStates.stack;
 }
 
 class VisibilityNotifier extends StateNotifier<VisibilityState> {
   static const persistKey = '__vis__';
   final SharedPreferences? pref;
   VisibilityNotifier({VisibilityState? visibility, this.pref})
-      : super(visibility ?? VisibilityState.sbs);
+      : super(visibility ?? VisibilityState.stack);
 
   factory VisibilityNotifier.fromPref(SharedPreferences? pref) {
     if (pref == null) return VisibilityNotifier();
     final index =
-        pref.getInt(persistKey) ?? VisibilityState.sbs.visibiilty.index;
+        pref.getInt(persistKey) ?? VisibilityState.stack.visibiilty.index;
     return VisibilityNotifier(
         visibility: VisibilityState.fromIndex(index), pref: pref);
   }

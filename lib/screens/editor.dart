@@ -15,15 +15,15 @@ import 'package:universal_io/io.dart';
 import '../formatters.dart';
 import '../providers.dart';
 
-class Main extends ConsumerStatefulWidget {
+class Editor extends ConsumerStatefulWidget {
   final String? initialValue;
-  const Main({Key? key, this.initialValue}) : super(key: key);
+  const Editor({Key? key, this.initialValue}) : super(key: key);
 
   @override
-  ConsumerState<Main> createState() => _MainState();
+  ConsumerState<Editor> createState() => _EditorState();
 }
 
-class _MainState extends ConsumerState<Main> {
+class _EditorState extends ConsumerState<Editor> {
   static final _isMobile = Platform.isAndroid || Platform.isIOS;
   Timer? timer;
 
@@ -120,8 +120,14 @@ class _MainState extends ConsumerState<Main> {
               child: Consumer(builder: buildEditor),
             ),
           ),
-        if (vertical && vis.sideBySide) const CustomDelimiter(),
-        if (!vertical && vis.sideBySide) const CustomVerticalDelimiter(),
+        if (vertical && vis.sideBySide)
+          CustomDelimiter(
+            color: Theme.of(bc).colorScheme.onBackground,
+          ),
+        if (!vertical && vis.sideBySide)
+          CustomVerticalDelimiter(
+            color: Theme.of(bc).colorScheme.primary,
+          ),
         if (vis.previewing)
           Expanded(
             child: Container(
@@ -156,13 +162,10 @@ class _MainState extends ConsumerState<Main> {
 
   @override
   Widget build(context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        endDrawer: const AppDrawer(),
-        body: SafeArea(
-          child: LayoutBuilder(builder: buildPage),
-        ),
+    return Scaffold(
+      endDrawer: const AppDrawer(),
+      body: SafeArea(
+        child: LayoutBuilder(builder: buildPage),
       ),
     );
   }
