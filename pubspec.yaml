@@ -87,6 +87,13 @@ flutter:
         - asset: assets/fonts/JetBrainsMono-Regular.ttf
         - asset: assets/fonts/JetBrainsMono-Italic.ttf
           style: italic
+    - family: AvenirNext
+      fonts:
+        - asset: assets/fonts/AvenirNextLTPro-Regular.otf
+        - asset: assets/fonts/AvenirNextLTPro-It.otf
+          style: italic
+        - asset: assets/fonts/AvenirNextLTPro-Regular.otf
+          weight: 700
   #   - family: Schyler
   #     fonts:
   #       - asset: fonts/Schyler-Regular.ttf

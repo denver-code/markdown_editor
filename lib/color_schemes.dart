@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_editor/internal/internal.hex2color.dart';
 
 const ayuFg = Color(0xff575f66);
 
@@ -15,6 +16,22 @@ const ayuDark = ColorScheme(
   onSecondary: Colors.black,
   onSurface: Color(0xffb3b1ad),
   onBackground: Color(0xffb3b1ad), // common.fg
+  onError: Colors.black, // common.fg
+  brightness: Brightness.dark,
+);
+
+final specialDark = ColorScheme(
+  primary: HexColor.fromHex("#BF5A69"), // syntax.tag
+  primaryContainer: const Color.fromARGB(255, 217, 74, 74), // syntax.entity
+  secondary: const Color.fromARGB(255, 123, 230, 80), // common.accent
+  secondaryContainer: const Color.fromARGB(255, 84, 255, 118), // syntax.func
+  surface: const Color.fromARGB(255, 30, 30, 30), // ui.selection.bg
+  background: HexColor.fromHex("#1A1C1C"), // common.bg
+  error: const Color(0xffff3333), // syntax.error
+  onPrimary: const Color.fromARGB(255, 255, 0, 0),
+  onSecondary: Colors.black,
+  onSurface: const Color.fromARGB(255, 180, 180, 180),
+  onBackground: const Color.fromARGB(255, 232, 232, 232), // common.fg
   onError: Colors.black, // common.fg
   brightness: Brightness.dark,
 );

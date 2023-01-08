@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:markdown_editor/internal/internal.handlers.dart';
+import 'package:markdown_editor/providers/providers.text.dart';
 import 'package:markdown_editor/widgets/app_drawer.dart';
 import 'package:markdown_editor/widgets/bottom_bar.dart';
+import 'package:markdown_editor/widgets/custom_delimiter.dart';
 import 'package:markdown_editor/widgets/custom_markdown.dart';
 import 'package:universal_io/io.dart';
 
@@ -18,37 +21,6 @@ class Main extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<Main> createState() => _MainState();
-}
-
-class EventHandler {
-  final bool ctrl;
-  final bool alt;
-  final bool meta;
-  final bool shift;
-  final String? description;
-  final PhysicalKeyboardKey key;
-  final KeyEventResult? Function(WidgetRef ref, RawKeyEvent event) onEvent;
-
-  const EventHandler({
-    required this.key,
-    required this.onEvent,
-    this.ctrl = false,
-    this.alt = false,
-    this.meta = false,
-    this.shift = false,
-    this.description,
-  });
-
-  KeyEventResult? handle(RawKeyEvent event, WidgetRef ref) {
-    if (event.physicalKey == key &&
-        (!ctrl || event.isControlPressed) &&
-        (!alt || event.isAltPressed) &&
-        (!meta || event.isMetaPressed) &&
-        (!shift || event.isShiftPressed)) {
-      if (description != null) debugPrint(description);
-      return onEvent(ref, event);
-    }
-  }
 }
 
 class _MainState extends ConsumerState<Main> {
@@ -66,85 +38,10 @@ class _MainState extends ConsumerState<Main> {
     previewScrollController.dispose();
   }
 
-  static final _handlers = <EventHandler>[
-    EventHandler(
-      key: PhysicalKeyboardKey.tab,
-      ctrl: true,
-      description: 'Next buffer',
-      onEvent: (ref, _) {
-        ref.read(sourceProvider.notifier).nextBuffer();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.tab,
-      onEvent: (ref, _) {
-        ref.read(handlerProvider).tab();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyL,
-      ctrl: true,
-      description: 'Select line',
-      onEvent: (ref, _) {
-        ref.read(handlerProvider).selectLine();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyM,
-      ctrl: true,
-      shift: true,
-      description: 'Insert math environment',
-      onEvent: (ref, _) {
-        ref.read(handlerProvider).mathEnvironment('aligned');
-        return KeyEventResult.handled;
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyM,
-      ctrl: true,
-      description: 'Math block (text)',
-      onEvent: (ref, event) {
-        ref.read(handlerProvider).mathText();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyB,
-      ctrl: true,
-      description: 'Bold',
-      onEvent: (ref, _) {
-        ref.read(handlerProvider).bold();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyI,
-      ctrl: true,
-      description: 'Italic',
-      onEvent: (ref, _) {
-        ref.read(handlerProvider).italic();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyS,
-      alt: true,
-      description: 'Bold',
-      onEvent: (ref, _) {
-        ref.read(handlerProvider).strikethrough();
-      },
-    ),
-    EventHandler(
-      key: PhysicalKeyboardKey.keyS,
-      ctrl: true,
-      description: 'Save',
-      onEvent: (ref, _) {
-        ref.read(sourceProvider.notifier).save();
-      },
-    ),
-  ];
-
   KeyEventResult onKey(FocusNode node, RawKeyEvent event) {
     if (event is! RawKeyUpEvent) return KeyEventResult.ignored;
     KeyEventResult? res;
-    for (final handler in _handlers) {
+    for (final handler in handlers) {
       if ((res = handler.handle(event, ref)) != null) {
         return res!;
       }
@@ -155,7 +52,9 @@ class _MainState extends ConsumerState<Main> {
   Widget buildEditor(BuildContext bc, WidgetRef ref, Widget? _) {
     return NotificationListener<ScrollUpdateNotification>(
       onNotification: (noti) {
-        return ref.read(visibiiltyProvider).doSyncScroll ? onScrolNotification(noti) : false;
+        return ref.read(visibiiltyProvider).doSyncScroll
+            ? onScrolNotification(noti)
+            : false;
       },
       child: FocusScope(
         onKey: onKey,
@@ -181,7 +80,8 @@ class _MainState extends ConsumerState<Main> {
 
   bool onScrolNotification(ScrollUpdateNotification noti) {
     if (!previewScrollController.hasClients) return false;
-    final extent = previewScrollController.position.maxScrollExtent / noti.metrics.maxScrollExtent;
+    final extent = previewScrollController.position.maxScrollExtent /
+        noti.metrics.maxScrollExtent;
     previewScrollController.jumpTo(noti.metrics.pixels * extent);
     return true;
   }
@@ -193,10 +93,12 @@ class _MainState extends ConsumerState<Main> {
       padding: EdgeInsets.zero,
       controller: previewScrollController,
       lazy: !ref.watch(visibiiltyProvider).doSyncScroll,
-      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(bc)).merge(MarkdownStyleSheet(
-        textScaleFactor: ref.watch(fontSizeProvider) / FontSizeNotifier.baseSize,
+      styleSheet:
+          MarkdownStyleSheet.fromTheme(Theme.of(bc)).merge(MarkdownStyleSheet(
+        textScaleFactor:
+            ref.watch(fontSizeProvider) / FontSizeNotifier.baseSize,
         code: const TextStyle(
-          fontFamily: 'JetBrains Mono',
+          fontFamily: 'AvenirNext',
         ),
       )),
     );
@@ -211,25 +113,25 @@ class _MainState extends ConsumerState<Main> {
           Expanded(
             child: Padding(
               padding: vertical
-                  ? const EdgeInsets.fromLTRB(16, 0, 16, 8)
+                  ? const EdgeInsets.fromLTRB(16, 10, 16, 8)
                   : _isMobile
-                      ? const EdgeInsets.fromLTRB(16, 32, 8, 8)
+                      ? const EdgeInsets.fromLTRB(16, 15, 8, 8)
                       : const EdgeInsets.fromLTRB(16, 16, 8, 8),
               child: Consumer(builder: buildEditor),
             ),
           ),
-        if (vertical && vis.sideBySide) const Divider(),
-        if (!vertical && vis.sideBySide) const VerticalDivider(),
+        if (vertical && vis.sideBySide) const CustomDelimiter(),
+        if (!vertical && vis.sideBySide) const CustomVerticalDelimiter(),
         if (vis.previewing)
           Expanded(
             child: Container(
               alignment: Alignment.topLeft,
               padding: vertical
                   ? _isMobile
-                      ? const EdgeInsets.fromLTRB(16, 32, 16, 0)
+                      ? const EdgeInsets.fromLTRB(16, 5, 16, 0)
                       : const EdgeInsets.fromLTRB(16, 16, 16, 8)
                   : _isMobile
-                      ? const EdgeInsets.fromLTRB(8, 32, 16, 8)
+                      ? const EdgeInsets.fromLTRB(8, 5, 16, 8)
                       : const EdgeInsets.fromLTRB(8, 16, 16, 8),
               child: Consumer(builder: buildPreview),
             ),
@@ -258,7 +160,9 @@ class _MainState extends ConsumerState<Main> {
       top: false,
       child: Scaffold(
         endDrawer: const AppDrawer(),
-        body: LayoutBuilder(builder: buildPage),
+        body: SafeArea(
+          child: LayoutBuilder(builder: buildPage),
+        ),
       ),
     );
   }

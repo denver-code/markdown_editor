@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:markdown_editor/providers.dart';
-import 'package:markdown_editor/screens/draw.dart';
+// import 'package:markdown_editor/screens/draw.dart';
 
 const environments = [
   'aligned',
@@ -37,16 +37,22 @@ class BottomBar extends ConsumerWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
-                  IconButton(icon: const Icon(Icons.format_bold), onPressed: handler.bold, tooltip: 'Bold'),
-                  IconButton(icon: const Icon(Icons.format_italic), onPressed: handler.italic, tooltip: 'Italic'),
                   IconButton(
-                    icon: const Icon(Icons.palette),
-                    onPressed: () {
-                      ref.read(scribbleProvider.notifier).setColor(Theme.of(context).textTheme.bodyText2!.color!);
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const DrawScreen()));
-                    },
-                    tooltip: 'Insert drawing',
-                  ),
+                      icon: const Icon(Icons.format_bold),
+                      onPressed: handler.bold,
+                      tooltip: 'Bold'),
+                  IconButton(
+                      icon: const Icon(Icons.format_italic),
+                      onPressed: handler.italic,
+                      tooltip: 'Italic'),
+                  // IconButton(
+                  //   icon: const Icon(Icons.palette),
+                  //   onPressed: () {
+                  //     ref.read(scribbleProvider.notifier).setColor(Theme.of(context).textTheme.bodyText2!.color!);
+                  //     Navigator.push(context, MaterialPageRoute(builder: (_) => const DrawScreen()));
+                  //   },
+                  //   tooltip: 'Insert drawing',
+                  // ),
                   IconButton(
                     icon: const Icon(Icons.format_strikethrough),
                     onPressed: handler.strikethrough,
@@ -70,11 +76,17 @@ class BottomBar extends ConsumerWidget {
                                     children: environments.map((env) {
                                       return InkWell(
                                         onTap: () {
-                                          ref.read(handlerProvider).mathEnvironment(env);
+                                          ref
+                                              .read(handlerProvider)
+                                              .mathEnvironment(env);
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                          child: Text(env, style: const TextStyle(fontFamily: 'JetBrains Mono')),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          child: Text(env,
+                                              style: const TextStyle(
+                                                  fontFamily:
+                                                      'JetBrains Mono')),
                                         ),
                                       );
                                     }).toList(growable: false),
@@ -92,8 +104,14 @@ class BottomBar extends ConsumerWidget {
                       child: Icon(Icons.functions),
                     ),
                   ),
-                  // const IconButton(icon: Icon(Icons.format_indent_increase), onPressed: noop, tooltip: 'Indent'),
-                  // const IconButton(icon: Icon(Icons.format_indent_decrease), onPressed: noop, tooltip: 'Dedent'),
+                  // const IconButton(
+                  //     icon: Icon(Icons.format_indent_increase),
+                  //     onPressed: noop,
+                  //     tooltip: 'Indent'),
+                  // const IconButton(
+                  //     icon: Icon(Icons.format_indent_decrease),
+                  //     onPressed: noop,
+                  //     tooltip: 'Dedent'),
                   Consumer(builder: (bc, ref, _) {
                     return IconButton(
                       icon: const Icon(Icons.save),
@@ -104,7 +122,8 @@ class BottomBar extends ConsumerWidget {
                             }
                           : null,
                     );
-                  })
+                  }),
+
                   // MouseRegion(
                   // cursor: SystemMouseCursors.click,
                   // child: GestureDetector(

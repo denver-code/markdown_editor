@@ -19,7 +19,7 @@ class AppDrawer extends ConsumerWidget {
       child: CustomScrollView(slivers: [
         const SliverList(
           delegate: SliverChildListDelegate.fixed([
-            SizedBox(height: 48),
+            SizedBox(height: 58),
             Center(child: Text('Menu')),
             Divider(),
           ]),
@@ -53,8 +53,11 @@ class AppDrawer extends ConsumerWidget {
               OutlinedButton.icon(
                 icon: const Icon(Icons.monitor_weight),
                 onPressed: () async {
-                  final file = await PlatformAssetBundle().loadString('assets/markdown_reference.md');
-                  ref.read(sourceProvider.notifier).syncControllerWithBuffer(file);
+                  final file = await PlatformAssetBundle()
+                      .loadString('assets/markdown_reference.md');
+                  ref
+                      .read(sourceProvider.notifier)
+                      .syncControllerWithBuffer(file);
                 },
                 label: const Text('Stress Test'),
               ),
@@ -87,9 +90,12 @@ class AppDrawer extends ConsumerWidget {
                 onSelected: ref.read(sourceProvider.notifier).export,
                 itemBuilder: (bc) {
                   return [
-                    const PopupMenuItem(value: Exports.html, child: Text('HTML')),
-                    const PopupMenuItem(value: Exports.htmlPlain, child: Text('HTML (Plain)')),
-                    const PopupMenuItem(value: Exports.md, child: Text('Markdown')),
+                    const PopupMenuItem(
+                        value: Exports.html, child: Text('HTML')),
+                    const PopupMenuItem(
+                        value: Exports.htmlPlain, child: Text('HTML (Plain)')),
+                    const PopupMenuItem(
+                        value: Exports.md, child: Text('Markdown')),
                   ];
                 },
               ),
@@ -97,7 +103,7 @@ class AppDrawer extends ConsumerWidget {
           ),
         ),
         const SliverPadding(
-          padding: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.only(top: 15),
           sliver: SliverList(
             delegate: SliverChildListDelegate.fixed([
               Center(child: Text('Buffers')),

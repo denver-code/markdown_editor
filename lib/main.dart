@@ -20,13 +20,17 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: 'Flutter Demo',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData.from(colorScheme: ayuLight),
-          darkTheme: ThemeData.from(colorScheme: ayuDark),
+          theme: ThemeData(colorScheme: ayuLight, fontFamily: "AvenirNext"),
+          darkTheme:
+              ThemeData(colorScheme: specialDark, fontFamily: "AvenirNext"),
           themeMode: ref.watch(themeModeProvider).themeMode,
           home: child!,
         );
       },
-      child: StatsFl(isEnabled: !kReleaseMode, align: Alignment.topRight, child: const Main()),
+      child: StatsFl(
+          isEnabled: !kReleaseMode,
+          align: Alignment.topRight,
+          child: const Main()),
     );
   }
 }
