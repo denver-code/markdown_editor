@@ -1,6 +1,7 @@
 # 🗒️ Markdown Editor
 
-Cross-platform Markdown editor in Flutter.
+Cross-platform Markdown editor in Flutter.  
+Pet project and base for another project.
 
 ## Features
 - [x] GitHub Markdown (+ tables)
@@ -9,9 +10,16 @@ Cross-platform Markdown editor in Flutter.
 - [x] Math (Katex)
 - [x] VSCode shortcuts
 - [x] Export to HTML
-- [ ] Import/manage Git repositories
-- [ ] Syntax highlighting
-- [ ] Custom shortcuts
-- [ ] Sketches
-- [ ] Online persistence
-- [ ] Mermaid charts
+
+## Run markdown_editor on your device/simulator from source code
+> [!NOTE]
+> For start confirm flutter instalation on your machine.
+``` Bash
+ git clone https://github.com/denver-code/markdown_editor
+ cd markdown_editor
+ flutter pub get
+ flutter run 
+```  
+
+## Credits
+Thanks to Desdaemon for good base
